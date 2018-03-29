@@ -15,6 +15,9 @@ const { auth } = require('./middleware/auth');
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+app.use(express.static('client/build'));
+
+
 /**
  * Routes
  */
@@ -221,6 +224,12 @@ app.post('/api/book_update', (req,res) => {
 	});
 })
 
+if ('production' === process.env.NODE_ENV) {
+	const path = require('path');
+	app.get('/*',(req,res) => {
+		res.sendfile( path.resolve( __dirname, '../client', 'build', 'index.html' ) )
+	})
+}
 
 /* Port */
 
